@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.Hyundai.Sso.dao.ContentsManageDao">
+	<select id="ContentPhysicalList" parameterType="java.util.HashMap" resultType="com.Hyundai.Sso.dto.ContentsDTO">
+		SELECT A.* from(
+		SELECT
+		    @ROWNUM:=@ROWNUM+1 AS ROWNUM,
+		    AA.NO,
+		    AA.TITLE,
+		    AA.CATEGORY,
+		   # AA.CONTENTS,
+		    AA.WRITER,
+		    AA.REG_DATE,
+		    AA.UPDATE_DATE,
+		    AA.READ_COUNT
+		FROM contents_manage AA,(SELECT @ROWNUM:=0) R
+		WHERE AA.CATEGORY = #{category}
+		AND CONT_KEY = 'K'
+		<if test="search_key != null and search_key != ''">
+		AND (AA.TITLE LIKE CONCAT('%', #{search_key},'%') 
+		OR AA.CONTENTS LIKE CONCAT('%', #{search_key},'%'))
+		</if>
+		ORDER BY REG_DATE DESC
+		) A
+		where A.ROWNUM <![CDATA[>=]]> #{startPageNo } and A.ROWNUM <![CDATA[<=]]> #{endPageNo }
+		
+    </select>
+    	<select id="ContentListToTalCnt" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(A.NO) AS TOTAL_COUNT from(
+			SELECT
+			    @ROWNUM:=@ROWNUM+1 AS ROWNUM,
+			    AA.NO,
+			    AA.TITLE,
+			    AA.CATEGORY,
+			  #  AA.CONTENTS,
+			    AA.WRITER,
+			    AA.REG_DATE,
+			    AA.UPDATE_DATE,
+			    AA.READ_COUNT
+			FROM contents_manage AA,(SELECT @ROWNUM:=0) R
+			WHERE AA.CATEGORY = #{category}
+			AND CONT_KEY = 'K'
+			<if test="search_key != null and search_key != ''">
+			AND (AA.TITLE LIKE CONCAT('%', #{search_key},'%') 
+			OR AA.CONTENTS LIKE CONCAT('%', #{search_key},'%'))
+			</if>
+		ORDER BY REG_DATE DESC) A
+    </select>
+    <insert id="ContentInsert" parameterType="com.Hyundai.Sso.dto.ContentsDTO">
+		INSERT INTO contents_manage
+		(
+		`TITLE`,
+		`CATEGORY`,
+		`CONTENTS`,
+		`WRITER`,
+		`REG_DATE`,
+		`CONT_KEY`
+		)
+		VALUES
+		(
+		#{TITLE},
+		#{CATEGORY},
+		#{CONTENTS},
+		#{WRITER},
+		now(),
+		'K'
+		)
+	</insert>     
+	<update id="ContentUpdate" parameterType="com.Hyundai.Sso.dto.ContentsDTO">
+		UPDATE contents_manage
+		SET
+		TITLE = #{TITLE},
+		CONTENTS = #{CONTENTS},
+		UPDATE_DATE = now()
+		WHERE NO = #{NO}
+    </update>
+	<update id="ReadCountUpdate" parameterType="java.util.HashMap">    
+		UPDATE contents_manage
+		SET
+		READ_COUNT = (SELECT
+		     AA.READ_COUNT
+		FROM contents_manage AA
+		WHERE AA.NO =  #{no}) + 1
+		WHERE NO = #{no}
+    </update>
+    <delete id="ContentDelete" parameterType="java.util.List">
+		DELETE FROM contents_manage WHERE NO IN
+		<foreach collection="list" item="item" open="(" close=")" separator=",">
+    		#{item}
+    	</foreach>
+	</delete>
+	<select id="ContentView" parameterType="java.util.HashMap" resultType="com.Hyundai.Sso.dto.ContentsDTO">
+		SELECT
+		    AA.NO,
+		    AA.TITLE,
+		    AA.CATEGORY,
+		    AA.CONTENTS
+		   # AA.WRITER,
+		   # AA.REG_DATE,
+		   # AA.UPDATE_DATE,
+		   # AA.READ_COUNT
+		FROM contents_manage AA
+		WHERE AA.NO = #{no}
+    </select>
+    <select id="ContentUserList" parameterType="java.util.HashMap" resultType="com.Hyundai.Sso.dto.ContentsDTO">
+    SELECT A.* from(
+		SELECT
+		    AA.NO,
+		    AA.TITLE,
+		    AA.CATEGORY,
+		  # AA.CONTENTS,
+		  # AA.WRITER,
+		    AA.REG_DATE
+		  # AA.UPDATE_DATE,
+		  # AA.READ_COUNT
+		FROM contents_manage AA
+		WHERE AA.CATEGORY = #{category}
+		<if test="search_key != null and search_key != ''">
+		AND (AA.TITLE LIKE CONCAT('%', #{search_key},'%') 
+		OR AA.CONTENTS LIKE CONCAT('%', #{search_key},'%'))
+		</if>
+		<if test="l_key != null and l_key != ''">
+		AND CONT_KEY = #{l_key}
+		</if>
+		) A
+		ORDER BY  A.REG_DATE DESC
+    </select>
+    <select id="ContentSearchList" parameterType="java.util.HashMap" resultType="com.Hyundai.Sso.dto.ContentsDTO">
+		SELECT
+		    AA.NO,
+		    AA.TITLE,
+		    AA.CATEGORY,
+		    AA.CONTENTS,
+		    AA.WRITER,
+		    AA.REG_DATE,
+		    AA.UPDATE_DATE,
+		    AA.READ_COUNT
+		FROM contents_manage AA
+		WHERE AA.CATEGORY != ''
+		<if test="search_key != null and search_key != ''">
+		AND (AA.TITLE LIKE CONCAT('%', #{search_key},'%') 
+		OR AA.CONTENTS LIKE CONCAT('%', #{search_key},'%'))
+		</if>
+		<if test="l_key != null and l_key != ''">
+		AND CONT_KEY = #{l_key}
+		</if>
+		ORDER BY  AA.CATEGORY DESC
+    </select>
+    <select id="ManagerList" parameterType="java.util.HashMap" resultType="com.Hyundai.Sso.dto.ManagerDTO">
+		SELECT 
+		    @ROWNUM:=@ROWNUM+1 AS ROWNUM,
+		    A.id,
+		    A.ip,
+		    A.email,
+		    A.info
+		FROM admin_member A,
+		(SELECT @ROWNUM:=0) R
+		<if test="l_ip != null and l_ip != ''">
+		WHERE A.ip = #{l_ip}
+		</if>
+    </select>
+    <delete id="ManagerDelete" parameterType="java.util.List">
+		DELETE FROM admin_member WHERE ip IN 
+		<foreach collection="list" item="item" open="(" close=")" separator=",">
+    		#{item}
+    	</foreach>
+	</delete>
+    <insert id="ManagerInsert" parameterType="com.Hyundai.Sso.dto.ManagerDTO">
+    	INSERT INTO admin_member
+		(
+		 id,
+		 ip,
+		 email,
+		 info)
+		VALUES
+		(
+		#{id},
+		#{ip},
+		#{email},
+		#{info})
+	</insert>
+	<update id="ManagerUpdate" parameterType="com.Hyundai.Sso.dto.ManagerDTO">
+		UPDATE admin_member
+		SET
+		id = #{id},
+		ip = #{ip}
+		WHERE ip = #{ip_old}
+	</update>	
+	<select id="MemberInfo" parameterType="java.util.HashMap" resultType="com.Hyundai.Sso.dto.ManagerDTO">
+			SELECT id,
+		       ip,
+		    email,
+		     info
+		   FROM admin_member
+		   WHERE ip = #{ip}
+    </select>
+    	<select id="ContentPhysicalList_EN" parameterType="java.util.HashMap" resultType="com.Hyundai.Sso.dto.ContentsDTO">
+		SELECT A.* from(
+		SELECT
+		    @ROWNUM:=@ROWNUM+1 AS ROWNUM,
+		    AA.NO,
+		    AA.TITLE,
+		    AA.CATEGORY,
+		    AA.CONTENTS,
+		    AA.WRITER,
+		    AA.REG_DATE,
+		    AA.UPDATE_DATE,
+		    AA.READ_COUNT
+		FROM contents_manage AA,(SELECT @ROWNUM:=0) R
+		WHERE AA.CATEGORY = #{category}
+		AND CONT_KEY = 'E'
+		<if test="search_key != null and search_key != ''">
+		AND (AA.TITLE LIKE CONCAT('%', #{search_key},'%') 
+		OR AA.CONTENTS LIKE CONCAT('%', #{search_key},'%'))
+		</if>
+		ORDER BY REG_DATE DESC
+		) A
+		where A.ROWNUM <![CDATA[>=]]> #{startPageNo } and A.ROWNUM <![CDATA[<=]]> #{endPageNo }
+    </select>
+    	<select id="ContentListToTalCnt_EN" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(A.NO) AS TOTAL_COUNT from(
+			SELECT
+			    @ROWNUM:=@ROWNUM+1 AS ROWNUM,
+			    AA.NO,
+			    AA.TITLE,
+			    AA.CATEGORY,
+			    AA.CONTENTS,
+			    AA.WRITER,
+			    AA.REG_DATE,
+			    AA.UPDATE_DATE,
+			    AA.READ_COUNT
+			FROM contents_manage AA,(SELECT @ROWNUM:=0) R
+			WHERE AA.CATEGORY = #{category}
+			AND CONT_KEY = 'E'
+			<if test="search_key != null and search_key != ''">
+			AND (AA.TITLE LIKE CONCAT('%', #{search_key},'%') 
+			OR AA.CONTENTS LIKE CONCAT('%', #{search_key},'%'))
+			</if>
+		ORDER BY ROWNUM DESC) A
+    </select>
+    <insert id="ContentInsert_EN" parameterType="com.Hyundai.Sso.dto.ContentsDTO">
+		INSERT INTO contents_manage
+		(
+		`TITLE`,
+		`CATEGORY`,
+		`CONTENTS`,
+		`WRITER`,
+		`REG_DATE`,
+		`CONT_KEY`
+		)
+		VALUES
+		(
+		#{TITLE},
+		#{CATEGORY},
+		#{CONTENTS},
+		#{WRITER},
+		now(),
+		'E'
+		)
+	</insert>     
+	<update id="ContentUpdate_EN" parameterType="com.Hyundai.Sso.dto.ContentsDTO">
+		UPDATE contents_manage
+		SET
+		TITLE = #{TITLE},
+		CONTENTS = #{CONTENTS},
+		UPDATE_DATE = now()
+		WHERE NO = #{NO}
+    </update>
+	<update id="ReadCountUpdate_EN" parameterType="java.util.HashMap">    
+		UPDATE contents_manage
+		SET
+		READ_COUNT = (SELECT
+		     AA.READ_COUNT
+		FROM contents_manage AA
+		WHERE AA.NO =  #{no}) + 1
+		WHERE NO = #{no}
+    </update>
+    <delete id="ContentDelete_EN" parameterType="java.util.List">
+		DELETE FROM contents_manage WHERE NO IN
+		<foreach collection="list" item="item" open="(" close=")" separator=",">
+    		#{item}
+    	</foreach>
+	</delete>
+	<select id="ContentView_EN" parameterType="java.util.HashMap" resultType="com.Hyundai.Sso.dto.ContentsDTO">
+		SELECT
+		    AA.NO,
+		    AA.TITLE,
+		    AA.CATEGORY,
+		    AA.CONTENTS,
+		    AA.WRITER,
+		    AA.REG_DATE,
+		    AA.UPDATE_DATE,
+		    AA.READ_COUNT
+		FROM contents_manage AA
+		WHERE AA.NO = #{no}
+    </select>
+    <select id="ContentUserList_EN" parameterType="java.util.HashMap" resultType="com.Hyundai.Sso.dto.ContentsDTO">
+		SELECT
+		    AA.NO,
+		    AA.TITLE,
+		    AA.CATEGORY,
+		  # AA.CONTENTS,
+		    AA.WRITER,
+		    AA.REG_DATE,
+		    AA.UPDATE_DATE,
+		    AA.READ_COUNT
+		FROM contents_manage AA
+		WHERE AA.CATEGORY = #{category}
+		<if test="search_key != null and search_key != ''">
+		AND (AA.TITLE LIKE CONCAT('%', #{search_key},'%') 
+		OR AA.CONTENTS LIKE CONCAT('%', #{search_key},'%'))
+		</if>
+		ORDER BY  AA.NO DESC
+    </select>
+    <select id="ContentSearchList_EN" parameterType="java.util.HashMap" resultType="com.Hyundai.Sso.dto.ContentsDTO">
+		SELECT
+		    AA.NO,
+		    AA.TITLE,
+		    AA.CATEGORY,
+		    AA.CONTENTS,
+		    AA.WRITER,
+		    AA.REG_DATE,
+		    AA.UPDATE_DATE,
+		    AA.READ_COUNT
+		FROM contents_manage AA
+		WHERE AA.CATEGORY != ''
+		<if test="search_key != null and search_key != ''">
+		AND (AA.TITLE LIKE CONCAT('%', #{search_key},'%') 
+		OR AA.CONTENTS LIKE CONCAT('%', #{search_key},'%'))
+		</if>
+		ORDER BY  AA.CATEGORY DESC
+    </select>
+</mapper>

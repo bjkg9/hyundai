@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta content="IE=edge" http-equiv="X-UA-Compatible">
+<meta content="telephone=no" name="format-detection">
+<meta http-equiv="Expires" content="-1">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="No-Cache">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta id="_csrf" name="_csrf" th:content="${_csrf.token}">
+<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}">
+<title></title>
+
+<link rel="stylesheet" href="admin/css/bootstrap.min.css" >  
+<link rel="stylesheet" href="admin/css/jquery.mCustomScrollbar.min.css" >  
+<link rel="stylesheet" href="admin/css/common.css">
+
+<script src="admin/js/jquery.min.js"></script>
+<script src="admin/js/bootstrap.min.js"></script> 
+<script src="admin/js/jquery.mCustomScrollbar.concat.min.js"></script> 
+<script src="admin/js/common.js"></script>
+</head>
+   <script type="text/javascript">
+  
+   function go_regist(){
+	   
+	   var frm = document.ipform;
+	   
+       var ip1 = frm.ip1.value;  
+       var ip2 = frm.ip2.value;
+       var ip3 = frm.ip3.value;
+       var ip4 = frm.ip4.value;
+       var ip5 = frm.ip5.value;
+       
+       var id1 = frm.ip1.value;
+       var id2 = frm.id2.value;
+       var id3 = frm.id3.value;
+       var id4 = frm.id4.value;
+       var id5 = frm.id5.value;
+       
+	   if((ip1==null&&id1==null||ip1==''&&id1=='')&&(ip2==null&&id2==null||ip2==''&&id2=='')&&(ip3==null&&id3==null||ip3==''&&id3=='')&&(ip4==null&&id4==null||ip4==''&&id4=='')&&(ip5==null&&id5==null||ip5==''&&id5=='')){
+		   alert("값릏 입력하세요.")
+		   return;
+	   }
+	   
+	   frm.action = "/manager_updateProcesss";
+	   frm.submit();
+   }
+
+   function home(){
+   	
+  		window.open('/RnDInforHome');
+   }
+   
+   function go_list(key){
+		  
+	   
+	   var frm = document.ipform;
+	   
+	   frm.category.value = key;
+	   frm.action = "/physical_List";
+	
+	   frm.submit();
+	  
+   }
+    </script> 
+<!-- body-화면ID -->
+<body>
+<form name="ipform" id="ipform" method="post">
+<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+<input type="hidden" name="category" value="" />
+<!-- container -->
+<div id="ct">
+    
+    <header id="hd"> 
+        <div class="wrap">
+            <div class="location">
+                <h1><img src="admin/images/logo.png" alt="zlgoon"></h1>
+                <h3>관리자 계정 수정 </h3>
+                <p>
+                    <span>Home</span>
+                    <span>컨텐츠 관리 </span>
+                    <span>관리자 계정 수정 </span>
+                </p>
+            </div>
+            <div class="snb"> 
+                <div class="profile">
+                    <a href=""> <span><strong>admin1 </strong>님</span></a>
+                </div>
+                <div class="link">
+                    <a href=""> <span>로그아웃</span></a>
+                    |
+                    <a th:onclick="|javascript:home()|" style="cursor: pointer"> <span>홈페이지 바로가기</span></a>
+                    |
+                    <a href="/physicalEN_List"> <span>영문 관리자 바로가기</span></a>
+                    |
+                    <a href="/manager_update"> <span style="color: #002c5f; font-weight: 600;">관리자 계정 수정</span></a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div id="lnb"> 
+        <h1><img src="admin/images/logo.png" alt="zlgoon"></h1>
+        <ul>
+            <li class="active">
+                <a href=""> 컨텐츠 관리 </a>
+                <ul class="dep2">
+                    <li class="active"><a href="javascript:go_list('C0001');">물리보안 관리</a></li>
+                    <li class="active"><a href="javascript:go_list('C0002');">기술보안 관리</a></li>
+                    <li class="active"><a href="javascript:go_list('C0003');">관리보안 관리</a></li>
+                </ul>
+            </li> 
+        </ul> 
+    </div>
+
+
+    <div class="page-container"> 
+        <!-- 페이지 시작 --> 
+        <div class="wrap">
+            <ul class="ip-regist">
+                <li> 
+                    <table class="tb v2 write text-center">
+                        <colgroup> 
+                            <col span="1" width="12%">
+                            <col span="1">  
+                            <col span="1" width="12%">
+                            <col span="1">  
+                        </colgroup> 
+                        <tr> 
+                            <th>IP</th>
+                            <td><input type="text" class="full" name="ip1" id="ip1" th:value="${ip1}"></td> 
+                            <th>ID</th>
+                            <td><input type="text" class="full" name="id1" id="id1" th:value="${id1}"></td> 
+                        </tr>  
+                    </table>
+                </li>
+                <li> 
+                    <table class="tb v2 write text-center">
+                        <colgroup> 
+                            <col span="1" width="12%">
+                            <col span="1">  
+                            <col span="1" width="12%">
+                            <col span="1">  
+                        </colgroup> 
+                        <tr> 
+                            <th>IP</th>
+                            <td><input type="text" class="full" name="ip2" id="ip2" th:value="${ip2}"></td> 
+                            <th>ID</th>
+                            <td><input type="text" class="full" name="id2" id="id2" th:value="${id2}"></td> 
+                        </tr>  
+                    </table>
+                </li>
+                <li> 
+                    <table class="tb v2 write text-center">
+                        <colgroup> 
+                            <col span="1" width="12%">
+                            <col span="1">  
+                            <col span="1" width="12%">
+                            <col span="1">  
+                        </colgroup> 
+                        <tr> 
+                            <th>IP</th>
+                            <td><input type="text" class="full" name="ip3" id="ip3" th:value="${ip3}"></td> 
+                            <th>ID</th>
+                            <td><input type="text" class="full" name="id3" id="id3" th:value="${id3}"></td> 
+                        </tr>  
+                    </table>
+                </li>
+                <li> 
+                    <table class="tb v2 write text-center">
+                        <colgroup> 
+                            <col span="1" width="12%">
+                            <col span="1">  
+                            <col span="1" width="12%">
+                            <col span="1">  
+                        </colgroup> 
+                        <tr> 
+                            <th>IP</th>
+                            <td><input type="text" class="full" name="ip4" id="ip4" th:value="${ip4}"></td> 
+                            <th>ID</th>
+                            <td><input type="text" class="full" name="id4" id="id4" th:value="${id4}"></td> 
+                        </tr>  
+                    </table>
+                </li>
+                <li> 
+                    <table class="tb v2 write text-center">
+                        <colgroup> 
+                            <col span="1" width="12%">
+                            <col span="1">  
+                            <col span="1" width="12%">
+                            <col span="1">  
+                        </colgroup> 
+                        <tr> 
+                            <th>IP</th>
+                            <td><input type="text" class="full" name="ip5" id="ip5" th:value="${ip5}"></td> 
+                            <th>ID</th>
+                            <td><input type="text" class="full" name="id5" id="id5" th:value="${id5}"></td> 
+                        </tr>  
+                    </table>
+                </li>
+            </ul>
+
+            <div class="text-right mt-5 mb-3"> 
+                <button type="button" class="btn" onclick="javascript:go_regist();">등록</button>
+            </div>
+        </div>   
+
+        <!-- //페이지 시작 -->
+    </div>
+</div>
+<!-- //container -->
+  
+<!-- footer -->
+<footer id="ft">  
+    <div>COPYRIGHT ⓒ HYUNDAI R&D. ALL RIGHTS RESERVED.</div> 
+</footer>
+<!-- //footer --> 
+<input type="hidden"  name="ip1_old" id="ip1_old" th:value="${ip1}">
+<input type="hidden"  name="ip2_old" id="ip2_old" th:value="${ip2}">
+<input type="hidden"  name="ip3_old" id="ip3_old" th:value="${ip3}">
+<input type="hidden"  name="ip4_old" id="ip4_old" th:value="${ip4}">
+<input type="hidden"  name="ip5_old" id="ip5_old" th:value="${ip5}">
+</form> 
+</body>
+</html>

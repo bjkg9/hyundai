@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta content="IE=edge" http-equiv="X-UA-Compatible">
+<meta content="telephone=no" name="format-detection">
+<meta http-equiv="Expires" content="-1">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="No-Cache">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta id="_csrf" name="_csrf" th:content="${_csrf.token}">
+<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}">
+<title></title>
+
+<link rel="stylesheet" href="admin/css/bootstrap.min.css" >  
+<link rel="stylesheet" href="admin/css/jquery.mCustomScrollbar.min.css" >  
+<link rel="stylesheet" href="admin/css/common.css">
+
+<script src="admin/js/jquery.min.js"></script>
+<script src="admin/js/bootstrap.min.js"></script> 
+<script src="admin/js/jquery.mCustomScrollbar.concat.min.js"></script> 
+<script src="admin/js/common.js}"></script>
+<script src="admin/js/jquery-3.6.0.min.js"></script>
+</head>
+
+<!-- body-화면ID -->
+<body>
+ 
+<!-- container -->
+<div id="ct">
+   <script type="text/javascript">
+    
+    function home(){
+    	
+   		window.open('/RnDInforHome');
+    }
+    
+	function do_write(){
+		
+		var frm = document.listform;
+		frm.action = "/writing";
+		frm.submit();
+		
+	}
+  
+   function go_list(key){
+		  
+	   
+	   var frm = document.listform;
+	   
+	   frm.category.value = key;
+	   frm.action = "/physical_List";
+	
+	   frm.submit();
+	  
+   }
+   
+   function go_page(pageNo){
+		  
+	   
+	   var frm = document.listform;
+	   
+	   frm.pageNo.value = pageNo;
+	   frm.action = "/physical_List";
+	
+	   frm.submit();
+	  
+   }
+   
+	function detailView(bNo){
+		
+		var frm = document.listform;
+
+		frm.bNo.value = bNo;
+		frm.action = "/content_View";
+		frm.submit();
+	}
+	
+   function searchList(){ 
+	   var frm = document.listform;
+
+	   frm.action = "/physical_List";
+	   frm.submit();
+	}
+   
+    function LogOut(){
+     
+	   $.ajax({
+		   type : 'GET',  
+		   url : '/logout',  
+		   beforeSend : function(xhr){
+				xhr.setRequestHeader(header, token);
+		   },
+		   success : function(returnData, textStatus, xhr) {   
+			   alert(returnData);
+		    if(returnData != null){
+		    	$("#layerPopup").show();
+		    }
+		   },
+		   error : function(xhr, status, e) { 	    
+			   $("#idError").text(e);
+		   }
+	});  		
+   }
+   
+   function out_cloose(){
+	   
+	   if (confirm("Close Window?")) {
+		   window.open('about:blank','_self').self.close();
+
+	   }else{
+		   $("#layerPopup").hide();
+		   document.location.href = "/RnDInforMain";
+	   }
+   }
+   
+   function do_delete(){
+
+
+	   var delConfirm = confirm('정말 삭제하시겠습니까? \n삭제가 되면 복구가 북가합니다.');
+	   var frm = document.listform;
+	   
+       if (delConfirm) {
+		  
+		  frm.action = "/delete_List";
+		  frm.submit();
+	      alert('삭제되었습니다.');
+	   
+       }else {
+	   
+    	   alert('삭제가 취소되었습니다.');
+	   }
+
+   	
+	}
+   
+   $(document).ready(function() {
+		$("#selectall").click(function() {
+			if($("#selectall").is(":checked")) $("input[name=boardNo]").prop("checked", true);
+			else $("input[name=boardNo]").prop("checked", false);
+		});
+		
+		$("input[name=boardNo]").click(function() {
+			var total = $("input[name=boardNo]").length;
+			var checked = $("input[name=boardNo]:checked").length;
+			
+			if(total != checked) $("#selectall").prop("checked", false);
+			else $("#selectall").prop("checked", true); 
+		});
+	});
+   
+    </script>  
+    <header id="hd"> 
+        <div class="wrap">
+            <div class="location">
+                <h1><img src="admin/images/logo.png" alt="zlgoon"></h1>
+                <h3 th:if="${category.equals('C0001')}">물리보안 관리 </h3>
+                <h3 th:if="${category.equals('C0002')}">기술보안 관리 </h3>
+                <h3 th:if="${category.equals('C0003')}">관리보안 관리 </h3>
+                <p>
+                    <span>Home</span>
+                    <span>컨텐츠 관리 </span>
+                    <span th:if="${category.equals('C0001')}">물리보안 관리 </span>
+                    <span th:if="${category.equals('C0002')}">기술보안 관리 </span>
+                    <span th:if="${category.equals('C0003')}">관리보안 관리 </span>
+                </p>
+            </div>
+            <div class="snb"> 
+                <div class="profile">
+                    <a href=""> <span><strong>admin1 </strong>님</span></a>
+                </div>
+                <div class="link">
+                    <a th:onclick="|javascrit:LogOut()|" style="cursor: pointer"> <span>로그아웃</span></a>
+                    |
+                    <a th:onclick="|javascript:home()|" style="cursor: pointer"> <span>홈페이지 바로가기</span></a>
+                    |
+                    <a href="/physicalEN_List"> <span>영문 관리자 바로가기</span></a>
+                    |
+                    <a href="/manager_update"> <span style="color: #002c5f; font-weight: 600;">관리자 계정 수정</span></a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div id="lnb"> 
+        <h1><img src="admin/images/logo.png" alt="zlgoon"></h1>
+        <ul>
+            <li class="active">
+                <a href=""> 컨텐츠 관리 </a>
+                <ul class="dep2">
+                    <li class="active"><a href="javascript:go_list('C0001');">물리보안 관리</a></li>
+                    <li class="active"><a href="javascript:go_list('C0002');">기술보안 관리</a></li>
+                    <li class="active"><a href="javascript:go_list('C0003');">관리보안 관리</a></li>
+                </ul>
+            </li>
+     <!--   <li>
+                <a href=""> 게시판 관리 </a>
+                <ul class="dep2">
+                    <li><a href=""></a></li>
+                    <li><a href=""></a></li>
+                    <li><a href=""></a></li>
+                </ul>
+            </li> 
+        </ul> -->
+    </div>
+    <div class="page-container"> 
+        <!-- 페이지 시작 --> 
+        <div class="wrap">
+            <form name="listform" id="listform" method="post">
+            <div class="list-search d-flex justify-content-between align-items-center">
+                <div>
+                    총 <b>[[${count}]]</b>건
+                </div>
+                <div> 
+                    <div class="form-srch">
+                        <input type="text" class="" name="search_key" id="search_key" placeholder="검색어를 입력하세요.">
+                        <button type="button" onclick="javascript:searchList()"><i class="icon-search-s">검색</i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="table-wrap">
+                <table class="tb text-center mt-3">
+                    <colgroup>
+                        <col span="1" width="8%">
+                        <col span="1" width="8%">
+                        <col span="1"> 
+                        <col span="1" width="12%">
+                        <col span="2" width="15%"> 
+                        <col span="1" width="8%">
+                    </colgroup>
+                    <thead>
+                        <tr><th><input type="checkbox" id="selectall" th:value="selectall"/></th>
+                            <th>번호 </th>
+                            <th>제목 </th>
+                            <th>관리자 </th>
+                            <th>최초 등록일 </th>
+                            <th>수정일</th>
+                            <th>조회수</th>
+                        </tr>
+                    </thead>
+                    <tbody id="list">
+                        <tr th:each="physic, iterState : ${phList}">
+                            <td><input type="checkbox" name="boardNo" th:value="${physic.NO}"/></td>
+                            <td th:text="${physic.ROWNUM}"></td>
+                            <td class="text-left pl-3"><a th:onclick="|javascript:detailView('${physic.NO}')|" style="cursor: pointer">[[${physic.TITLE}]]</a></td>
+                            <td th:text="${physic.WRITER}"></td>
+                            <td th:text="${physic.REG_DATE}"></td>
+                            <td th:text="${physic.UPDATE_DATE}"></td>
+                            <td th:text="${physic.READ_COUNT}"></td>
+                        </tr> 
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-5 mb-3">
+                <div>
+                    <button type="button" class="btn btn-light" th:onclick="do_delete();">삭제</button>
+                </div>
+                <div> 
+                    <ul class="pagination">
+                        <li class="page-item">
+                        <a class="page-link" th:onclick="|javascript:go_page(${paging.getPrevPageNo()})|" aria-label="Previous" style="cursor: pointer"><span aria-hidden="true"><i class="xi-angle-left-min"></i></span></a></li>
+                        <th:block th:each="num : ${#numbers.sequence(paging.getStartPageNo(),paging.getEndPageNo())}">
+                        <li th:if="${num == paging.getPageNo()}" class="page-item"><a class="page-link active" th:onclick="|javascript:go_page(${num})|" th:text="${num}" style="cursor: pointer"></a></li>
+                        <li th:unless="${num == paging.getPageNo()}" class="page-item"><a class="page-link" th:onclick="|javascript:go_page(${num})|" th:text="${num}" style="cursor: pointer"></a></li>
+                        </th:block>
+                        <a class="page-link" th:onclick="|javascript:go_page(${paging.getNextPageNo()})|" aria-label="Next" style="cursor: pointer"><span aria-hidden="true"><i class="xi-angle-right-min"></i></span></a></li>
+                    </ul> 
+                </div>
+                <div>
+                    <button type="button" class="btn" th:onclick="do_write()">등록</button>
+                </div>
+            </div>
+            <input type="hidden" name="category" th:value="${category}" />
+            <input type="hidden" name=bNo value="" />
+            <input type="hidden" name=pageNo th:value="${paging.getPageNo()}" />
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            </form>
+        </div>   
+          <style type="text/css">
+  * {
+    margin:0;
+    padding:0;
+}
+
+ul, li { list-style: none; }
+
+a { text-decoration: none; }
+
+#layerPopup {
+    display: none;
+}
+
+#layerPopup + label {
+    display:inline-block;
+    padding: 7px 14px;
+    background:#333;
+    color:#fff;
+}
+
+#layer_bg {
+    display:none;
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.5);
+}
+
+#layer_bg > #popup {
+    position:absolute;
+    padding:15px;
+    box-sizing:border-box;
+    border-radius:15px; 
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    width:300px;
+    height:200px;
+    background:#fff;
+    box-shadow: 7px 7px 5px rgba(0,0,0,0.2); 
+}
+
+#layer_bg > #popup > h2 {
+    margin-bottom:25px;
+}
+
+#layer_bg > #popup > h2 > label {
+    float: right;
+}
+
+#layer_bg {
+    display:block;
+}
+
+  </style>
+  <div id="layerPopup">
+        <div id="layer_bg">
+            <div id="popup">
+                <h2>MESSAGE</h2>
+                    Logged out Successful.
+				<div class="btn_area">
+				<button type="button" name="button" class="btn" th:onclick="|javascript:out_cloose();|">닫기</button>
+			    </div>
+            </div>
+        </div>
+    </div>
+        <!-- //페이지 시작 -->
+    </div>
+    </th:block>
+</div>
+<!-- //container -->
+
+<!-- footer -->
+<footer id="ft">  
+    <div>COPYRIGHT ⓒ HYUNDAI R&D. ALL RIGHTS RESERVED.</div> 
+</footer>
+<!-- //footer -->  
+
+</body>
+</html>

@@ -1,0 +1,57 @@
+<html xmlns="http://www.w3.org/1999/xhtml" 
+    xmlns:th="http://www.thymeleaf.org" 
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta content="IE=edge" http-equiv="X-UA-Compatible">
+<meta content="telephone=no" name="format-detection">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title></title>
+
+<link rel="stylesheet" href="css/bootstrap.min.css">  
+<link rel="stylesheet" href="css/common.css">
+
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script> 
+<script src="js/common.js"></script>
+</head>
+
+<!-- body-화면ID -->
+<body class="login">  
+    <div class="loginFrame">
+        <div>
+            <div class="text-center">
+                <p><img src="images/icon-lock.png" alt="login"></p>
+                <p class="login-title">R&D 임직원 정보보호 매뉴얼</p>
+                <p>Hmg R&D center</p>
+            </div>
+
+            <form action="">
+                <p>
+                    <label for=""> 아이디</label> 
+                    <input type="text" placeholder="아이디를 입력해주세요">
+                </p>
+                <p>
+                    <label for="">비밀번호</label> 
+                    <input type="password" placeholder="비밀번호를 입력해주세요">
+                </p>
+                <p>
+                    <label for="saveid" class="text-right">
+                        <input id="saveid" class="sm" type="checkbox">
+                        <span>아이디 저장</span>
+                    </label>
+                </p>
+                <p>
+                    <button class="login" type="submit">LOGIN</button>
+                </p>
+            </form>
+
+            <p class="cscenter">
+                <a href="">홈페이지 바로가기</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta content="IE=edge" http-equiv="X-UA-Compatible">
+<meta content="telephone=no" name="format-detection">
+<meta http-equiv="Expires" content="-1">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="No-Cache">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta id="_csrf" name="_csrf" th:content="${_csrf.token}">
+<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}">
+<title></title>
+
+<link rel="stylesheet" href="admin/css/bootstrap.min.css" >  
+<link rel="stylesheet" href="admin/css/jquery.mCustomScrollbar.min.css" >  
+<link rel="stylesheet" href="admin/css/common.css">
+<script src="ckeditor/ckeditor.js"></script>
+<script src="admin/js/jquery.min.js"></script>
+<script src="admin/js/bootstrap.min.js"></script> 
+<script src="admin/js/jquery.mCustomScrollbar.concat.min.js"></script> 
+<script src="admin/js/common.js"></script>
+<style>
+.ck.ck-editor{
+max-width:1200px;
+}
+.ck-editor__editable{
+min-height:500px;
+}
+</style>
+</head>
+
+<!-- body-화면ID -->
+<body>
+ 
+<!-- container -->
+<div id="ct" layout:fragment="content">
+    <script type="text/javascript">
+    windows.onload=function(){
+    	   CKEDITOR.instances.contents.setData('${content}');
+    }
+    
+    function go_list(key){
+ 	   
+ 	   var frm = document.Registration;
+
+ 	   if(key != null && key != ''){
+ 	       frm.category.value = key;
+ 	   }
+ 	   
+ 	   frm.action = "/physicalEN_List";
+ 	   frm.submit();
+    }
+    
+    function getContextPath() {
+        var hostIndex = location.href.indexOf( location.host ) + location.host.length;
+        alert(location.href.substring( hostIndex, location.href.indexOf('/', hostIndex + 1)) );
+    }
+    
+    $(document).ready(function(){
+
+    	CKEDITOR.config.allowedContent = true;
+    	CKEDITOR.filebrowserUploadMethod = 'form'; 
+    	CKEDITOR.replace("contents",
+    	{
+    		filebrowserUploadUrl:'/ckeditor/upload',
+    	    filebrowserImageUploadUrl: '/fileUpload',
+    	font_names: '맑은 고딕/Malgun Gothic;굴림/Gulim;돋움/Dotum;바탕/Batang;궁서/Gungsuh;Arial/Arial;Comic Sans MS/Comic Sans MS;Courier New/Courier New;Georgia/Georgia;Lucida Sans Unicode/Lucida Sans Unicode;Tahoma/Tahoma;Times New Roman/Times New Roman;MS Mincho/MS Mincho;Trebuchet MS/Trebuchet MS;Verdana/Verdana',
+    	font_defaultLabel: '맑은 고딕/Malgun Gothic', fontSize_defaultLabel: '12',
+    	language: 'ko',
+    	allowedContent:true,
+    	toolbar: [ { name: 'document', items : [ 'Source' ] },
+    	{ name: 'basicstyles', items : [ 'Bold','Italic','Underline','Strike','Subscript','Superscript' ] }, 
+    	{ name: 'paragraph', items : [ 'NumberedList','BulletedList','-','JustifyLeft','JustifyCenter',
+    	'JustifyRight','JustifyBlock' ] }, { name: 'links', items : [ 'Link','Unlink' ] },
+    	{ name: 'insert', items : [ 'Image','Table' ] }, 
+    	'/', 
+    	{ name: 'styles', items : [ 'Font', 'FontSize' ] }, 
+    	{ name: 'colors', items : [ 'TextColor', 'BGColor' ] } ] }); 
+
+   	});
+    
+    function go_write(){
+    	
+    	var frm = document.Registration;
+    	
+    	var cont =  CKEDITOR.instances.contents.getData();
+    
+		frm.action = "/ENwrite_process";
+		frm.submit();
+    	
+    }
+   
+    /**
+    보안 문제로 태그 제거 필요 할때.
+    **/
+    function rm_tag(text){
+    	
+   	 text = text.replace(/<br\/>/ig, "\n");
+   	 text = text.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
+
+
+   	 text = text.replace(/(<([^>]+)>)/gi, "");
+   	 text = text.replace(/&nbsp;/gi,"");
+
+   	 return text;
+   	
+    }
+    
+    function home(){
+       	
+  		window.open('/EN');
+   }
+    </script>    
+    <header id="hd"> 
+        <div class="wrap">
+            <div class="location">
+                <h1><img src="admin/images/logo.png" alt="zlgoon"></h1>
+                <h3 th:if="${category.equals('C0001')}">물리보안 관리 </h3>
+                <h3 th:if="${category.equals('C0002')}">기술보안 관리 </h3>
+                <h3 th:if="${category.equals('C0003')}">관리보안 관리 </h3>
+                <p>
+                    <span>Home</span>
+                    <span>컨텐츠 관리 </span>
+                    <span th:if="${category.equals('C0001')}">물리보안 관리 </span>
+                    <span th:if="${category.equals('C0002')}">기술보안 관리 </span>
+                    <span th:if="${category.equals('C0003')}">관리보안 관리 </span>
+                </p>
+            </div>
+            <div class="snb"> 
+                <div class="profile">
+                    <a href=""> <span><strong>admin1 </strong>님</span></a>
+                </div>
+                <div class="link">
+                    <a href=""> <span>로그아웃</span></a>
+                    |
+                    <a th:onclick="|javascript:home()|" style="cursor: pointer"> <span>홈페이지 바로가기</span></a>
+                    |
+                    <a href="/physical_List"> <span>국문 관리자 바로가기</span></a>
+                    |
+                    <a href="/manager_update"> <span style="color: #002c5f; font-weight: 600;">관리자 계정 수정</span></a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div id="lnb"> 
+        <h1><img src="admin/images/logo.png" alt="zlgoon"></h1>
+        <ul>
+            <li class="active">
+                <a href=""> 컨텐츠 관리 </a>
+                <ul class="dep2">
+                    <li class="active"><a href="javascript:go_list('C0001');">물리보안 관리</a></li>
+                    <li><a href="javascript:go_list('C0002');">기술보안 관리</a></li>
+                    <li><a href="javascript:go_list('C0003');">관리보안 관리</a></li>
+                </ul>
+            </li> 
+        </ul> 
+    </div>
+
+
+    <div class="page-container"> 
+        <!-- 페이지 시작 --> 
+        <div class="wrap">
+           <form method="post" name="Registration" enctype="multipart/form-data">  
+           <input type="hidden" name="category" th:value="${category}" />
+           <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <div class="table-wrap">
+                <table class="tb write text-center mt-3">
+                    <colgroup> 
+                        <col span="1" width="18%">
+                        <col span="1">  
+                    </colgroup> 
+                    <tr> 
+                        <th>제목 <span class="imp">*</span></th>
+                        <td><input type="text" class="full" name="title" id="title"></td> 
+                    </tr> 
+                    <tr>  
+                        <td colspan="2"><textarea name="contents" id=""contents rows="15" class="ckeditor"></textarea></td> 
+                    </tr> 
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-5 mb-3">
+                <div>
+                    <button type="button" class="btn btn-light" th:onclick="go_list()">목록</button>
+                </div> 
+                <div>
+                    <button type="button" class="btn" th:onclick="go_write()">등록</button>
+                </div>
+            </div>
+          </form>
+        </div>   
+        
+        <!-- //페이지 시작 -->
+    </div>
+</div>
+<!-- //container -->
+  
+<!-- footer -->
+<footer id="ft">  
+    <div>COPYRIGHT ⓒ HYUNDAI R&D. ALL RIGHTS RESERVED.</div> 
+</footer>
+<!-- //footer -->  
+</body>
+</html>

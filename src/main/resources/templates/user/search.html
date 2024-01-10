@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta content="IE=edge" http-equiv="X-UA-Compatible">
+<meta content="telephone=no" name="format-detection">
+<meta http-equiv="Expires" content="-1">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="No-Cache">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta id="_csrf" name="_csrf" th:content="${_csrf.token}">
+<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}">
+<title></title>
+
+<link rel="stylesheet" href="user/css/bootstrap.min.css" >  
+<link rel="stylesheet" href="user/css/jquery.mCustomScrollbar.min.css" >  
+<link rel="stylesheet" href="user/css/common.css">
+
+<script src="user/js/jquery.min.js"></script>
+<script src="user/js/bootstrap.min.js"></script> 
+<script src="user/js/jquery.mCustomScrollbar.concat.min.js"></script> 
+<script src="user/js/common.js"></script>
+</head>
+<script type="text/javascript">
+  
+    document.addEventListener('keydown', function(event) {
+	  if (event.keyCode === 13) {
+	   // event.preventDefault();
+	   go_search();
+	  };
+	}, true);
+	
+   function go_page(key,no){
+	  
+	   var frm = document.searchform;
+	   
+	   frm.category.value = key;
+	   frm.bNo.value = no;
+	   frm.action = "/RnDInforView";
+	   frm.submit();
+   }
+
+   function go_siteMap(){
+	   
+       var frm = document.searchform;
+	   
+	   //frm.category.value = key;
+	   frm.action = "/RnDInforSiteMap";
+	   frm.submit();
+	 
+   }
+   
+   function go_search(){
+	   
+       var frm = document.searchform;
+
+	   frm.action = "/RnDInforSearch";
+	   frm.submit();
+	 
+   }
+   
+   function go_cpage(key){
+		  
+	   var frm = document.searchform;
+	   
+	   if(key=="EN"){
+		   frm.l_key.value = "E";
+		   frm.action = "/RnDInforSearch_en";
+	   }else{
+		   frm.action = "/RnDInforSearch";   
+	   }
+	   
+	   frm.submit();
+  }
+  
+   function download(){
+	   
+       var frm = document.searchform;
+       
+	   frm.action = "/fileDown/download";
+	   frm.submit();
+	 
+   }
+    </script> 
+<!-- body-화면ID -->
+<body>  
+<form name="searchform" id="searchform" method="post"> 
+<!-- header -->
+<header id="hd">
+    <div class="gnb-area">
+        <h1><a href="/RnDInforHome"><img src="user/images/top-logo.png" alt="R&D 임직원 정보보호 매뉴얼"></a></h1>
+        
+        <div class="d-flex">
+            <div class="form-srch">
+                <input type="text" class="" placeholder="키워드를 입력해주세요." name="search_key">
+                <button type="button" onclick="go_search();"><i class="icon-search">검색</i></button>
+            </div>
+            <div> 
+                <div class="language dropdown">
+                    <button class="dropdown-toggle" type="button" id="language-dropdown" data-toggle="dropdown">
+                        Kr
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="language-dropdown">
+                       <a class="dropdown-item" th:onclick="|javascript:go_cpage('KR')|" style="cursor: pointer">Kr</a>
+                       <a class="dropdown-item" th:onclick="|javascript:go_cpage('EN')|" style="cursor: pointer">En</a> 
+                    </div>
+                </div> 
+            </div>
+            <!--<div class="down">
+                <a href="user/downloadFlie/HMG R&D_Information Protection Manual_KR.pdf"><i class="icon-down">다운로드</i></a>
+            </div>-->
+            <div>
+                <a href="#gnb-full" class="btn-menu" data-toggle="menu"><i></i><span class="sr-only">메뉴 열기</span></a> 
+            </div>
+        </div>
+    </div> 
+    <a href="#contents" class="skip sr-only">전체메뉴 건너뛰기</a>
+    <div id="gnb-full" class="active1">
+        <a href="#gnb-full" class="btn-menu-close" data-toggle="menu"><i class="xi-close"></i><span class="sr-only">메뉴 닫기</span></a> 
+        <div class="full-nav">
+            <div class="dep1">
+                <ul>
+                    <li data-active="1" class="active"><p>출입 <span>(인원/차량/장비)</span> </p></li>
+                    <li data-active="2"><p>IT 보안 <span>(PC/네트워크)</span> </p></li>
+                    <li data-active="3"><p>관리 <span>(교육/홍보)</span></p></li> 
+                </ul>
+            </div>
+            <div class="dep2">
+                <div class="dep2-list">
+                    <ul id="active1">
+                    <th:block th:each="psubj:${spList}">
+                        <li><a th:onclick="|javascript:go_page('C0001','${psubj.NO}')|" style="cursor: pointer">[[${psubj.TITLE}]]</a></li>
+                    </th:block>
+                    </ul>
+                    
+                    <ul id="active2">
+                     <th:block th:each="tsubj:${stList}">
+                        <li><a th:onclick="|javascript:go_page('C0002','${tsubj.NO}')|" style="cursor: pointer">[[${tsubj.TITLE}]]</a></li>
+                    </th:block>
+                    </ul>
+                    
+                    <ul id="active3">
+                     <th:block th:each="msubj:${smList}">
+                        <li><a th:onclick="|javascript:go_page('C0003','${msubj.NO}')|" style="cursor: pointer">[[${msubj.TITLE}]]</a></li>
+                    </th:block>
+                    </ul>
+                </div> 
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- //header -->
+
+<!-- container -->
+<div id="ct" class="search"><a name="contents"></a>
+<!-- 페이지 시작 --> 
+    <div class="top-visual">
+        <div class="wrap">
+            <h2>Search</h2> 
+        </div>
+    </div> 
+
+    <div class="content wrap">
+
+        <div class="result-box" th:if="${size != '0'}">
+            입력하신 “<strong>[[${search_key}]]</strong>”의 일치하는 결과가 <strong>[[${size}]]</strong>건 확인되었습니다.  
+        </div>
+
+        <div class="result-list" th:if="${size != '0'}"> 
+            <h4>출입 (인원/차량/장비)</h4>
+            <ul>
+            <th:block th:each="result:${pList}">
+                <li th:if="${result.CATEGORY} =='C0001'"><a th:onclick="|javascript:go_page('C0001','${result.NO}')|" style="cursor: pointer">[[${result.TITLE}]]</a></li>
+             </th:block>
+            </ul>
+            <h4>IT 보안 (PC/네트워크)</h4>
+            <ul>
+            <th:block th:each="result:${pList}">
+                <li th:if="${result.CATEGORY} =='C0002'"><a th:onclick="|javascript:go_page('C0002','${result.NO}')|" style="cursor: pointer">[[${result.TITLE}]]</a></li>
+            </th:block>
+            </ul>
+            <h4>관리 (교육/점검)</h4>
+            <ul>
+            <th:block th:each="result:${pList}">
+                <li th:if="${result.CATEGORY} =='C0003'"><a th:onclick="|javascript:go_page('C0003','${result.NO}')|" style="cursor: pointer">[[${result.TITLE}]]</a></li>
+            </th:block>
+            </ul>
+        </th:block>
+        </div>
+        
+        <!-- 결과없을때 -->
+        <div class="result-box none" th:if="${size == '0'}">
+            <p class="text-center pb-3">
+                <img src="user/images/icon-noresult.png" alt="no-result">
+            </p>
+            입력하신 “<strong>[[${search_key}]]</strong>”의  일치하는 결과가 없습니다. 
+        </div>
+
+    </div>
+<!-- //페이지 시작 --> 
+</div>
+<!-- //container id="ct" -->
+
+<!-- footer -->
+<footer id="ft">  
+    <div>COPYRIGHT ⓒ HYUNDAI R&D. ALL RIGHTS RESERVED.</div>
+    <div><button class="btn" onclick="javascript:go_siteMap();">Site map</button></div>
+</footer>
+<!-- //footer -->  
+<input type="hidden" name="category" value="" />
+<input type="hidden" name="l_key" value="K" /> 
+<input type="hidden" name="bNo" value="" />
+<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+</body>
+</html>
+

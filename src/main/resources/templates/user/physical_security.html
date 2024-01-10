@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta content="IE=edge" http-equiv="X-UA-Compatible">
+<meta content="telephone=no" name="format-detection">
+<meta http-equiv="Expires" content="-1">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="No-Cache">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta id="_csrf" name="_csrf" th:content="${_csrf.token}">
+<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}">
+<title></title>
+
+<link rel="stylesheet" href="user/css/bootstrap.min.css" >  
+<link rel="stylesheet" href="user/css/jquery.mCustomScrollbar.min.css" >  
+<link rel="stylesheet" href="user/css/common.css">
+
+<script src="user/js/jquery.min.js"></script>
+<script src="user/js/bootstrap.min.js"></script> 
+<script src="user/js/jquery.mCustomScrollbar.concat.min.js"></script> 
+<script src="user/js/common.js"></script>
+</head>
+   <script type="text/javascript">
+   
+   window.onload = function() {
+	   
+		  /*<![CDATA[*/
+	      var _bNo = "[[${bNo}]]";
+	      /*]]>*/  
+//alert(_bNo);
+	      if(_bNo != 'undefined' && _bNo != ''){
+	    	  setView(_bNo);
+	      }
+	  };
+	  
+	  
+   function home(key){
+       
+       if(key == "EN"){
+    	   document.location.href = "/EN";
+       }else{
+    	   document.location.href = "/RnDInforHome";
+       }
+
+   }
+   
+   function go_list(key){
+	   
+	   var frm = document.viewform;
+	   
+	   frm.category.value = key;
+	   frm.action = "/RnDInforView";
+	   frm.submit();
+   }
+
+   function go_page(key,no){
+		  
+	   var frm = document.viewform;
+	   frm.category.value = key;
+	   frm.bNo.value = no;
+
+	   frm.action = "/RnDInforView";    
+	   frm.submit();
+   }
+   
+   function cgo_page(key){
+		  
+	   var frm = document.viewform;
+	   frm.category.value = "C0001";
+//	   alert(key);
+	   if(key=="EN"){
+		   frm.l_key.value = "E";
+		   frm.bNo.value = "";
+		   frm.action = "/RnDInforView_en";
+		   
+	   }else{
+		   frm.action = "/RnDInforView";   
+	   }
+	   
+	   frm.submit();
+	  }
+   
+   function get_SiteMap(ct){
+	   
+	   $.ajax({
+		   type : 'POST',  
+		   data:"category="+ ct,
+		   dataType : 'json',
+		   url : '/ajax_RnDInforSiteMap',  
+		   success : function(returnData, textStatus, xhr) {    		    
+
+		    if(returnData != null){
+		   
+	    	$("#mssg").text("<ul>"+returnData.txt+"</ul>");
+		    }
+		   },
+		   error : function(xhr, status, e) { 	    
+			   $("#idError").text(e);
+		   }
+	});  				
+   }
+   
+   function go_DetailView(obj){
+	   
+       var frm = document.viewform;
+       
+       var token = $("meta[name='_csrf']").attr("content");
+       var header = $("meta[name='_csrf_header']").attr("content");
+
+	   $.ajax({
+		   type : 'POST',  
+		   data:"category="+frm.category.value+"&bNo="+obj.value,
+		   dataType : 'json',
+		   url : '/RnDInforViewDetail',  
+		   beforeSend : function(xhr){
+				xhr.setRequestHeader(header, token);
+		   },
+		   success : function(returnData, textStatus, xhr) {    		    
+		    if(returnData != null){
+
+		    	$("#mssg").empty();
+		        $("#mssg").append(returnData.html);
+		       
+		     //  const element = document.getElementById('mssg');
+		     //  element.innerHTML += returnData.html;
+		    }
+		   },
+		   error : function(xhr, status, e) { 	    
+			   $("#idError").text(e);
+		   }
+	});  				
+   }
+   
+   function setView(_bNo){
+	   
+       var frm = document.viewform;
+       
+       var token = $("meta[name='_csrf']").attr("content");
+       var header = $("meta[name='_csrf_header']").attr("content");
+
+	   $.ajax({
+		   type : 'POST',  
+		   data:"category="+frm.category.value+"&bNo="+_bNo,
+		   dataType : 'json',
+		   url : '/RnDInforViewDetail',  
+		   beforeSend : function(xhr){
+				xhr.setRequestHeader(header, token);
+		   },
+		   success : function(returnData, textStatus, xhr) {    		    
+		    if(returnData != null){
+
+		    	$("#mssg").empty();
+		        $("#mssg").append(returnData.html);
+		       
+		     //  const element = document.getElementById('mssg');
+		     //  element.innerHTML += returnData.html;
+		    }
+		   },
+		   error : function(xhr, status, e) { 	    
+			   $("#idError").text(e);
+		   }
+	});  				
+   }
+   
+   function go_search(){
+	   
+       var frm = document.viewform;
+       
+	   frm.action = "/RnDInforSearch";
+	   frm.submit();
+	 
+   }
+   
+   function go_siteMap(){
+	   
+       var frm = document.viewform;
+	   
+	   //frm.category.value = key;
+	   frm.action = "/RnDInforSiteMap";
+	   frm.submit();
+	 
+   }
+   
+  function download(){
+	   
+       var frm = document.viewform;
+       
+	   frm.action = "/fileDown/download";
+	   frm.submit();
+	 
+   }
+    </script> 
+
+<!-- body-화면ID -->
+<body>  
+<form name="viewform" id="viewform" method="post">
+<!-- header -->
+<header id="hd">
+    <div class="gnb-area">
+        <h1><a th:onclick="|javascript:home('KR')|" style="cursor: pointer"><img src="user/images/top-logo.png" alt="R&D 임직원 정보보호 매뉴얼"></a></h1>
+        
+        <div class="d-flex">
+            <div class="form-srch">
+                <input type="text" class="" placeholder="키워드를 입력해주세요." name="search_key">
+                <button type="button" th:onclick="go_search();"><i class="icon-search">검색</i></button>
+            </div>
+            <div> 
+                <div class="language dropdown">
+                    <button class="dropdown-toggle" type="button" id="language-dropdown" data-toggle="dropdown">
+                        Kr
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="language-dropdown">
+                        <a class="dropdown-item" th:onclick="|javascript:cgo_page('KR')|" style="cursor: pointer">Kr</a>
+                        <a class="dropdown-item" th:onclick="|javascript:cgo_page('EN')|" style="cursor: pointer">En</a> 
+                    </div>
+                </div> 
+            </div>
+            <!--<div class="down">
+                <a href="user/downloadFlie/HMG R&D_Information Protection Manual_KR.pdf"><i class="icon-down">다운로드</i></a>
+            </div>-->
+            <div>
+                <a href="#gnb-full" class="btn-menu" data-toggle="menu"><i></i><span class="sr-only">메뉴 열기</span></a> 
+            </div>
+        </div>
+    </div> 
+    <a href="#contents" class="skip sr-only">전체메뉴 건너뛰기</a>
+    <div id="gnb-full" class="active1">
+        <a href="#gnb-full" class="btn-menu-close" data-toggle="menu"><i class="xi-close"></i><span class="sr-only">메뉴 닫기</span></a> 
+        <div class="full-nav">
+            <div class="dep1">
+                <ul>
+                    <li data-active="1" class="active"><p>출입 <span>(인원/차량/장비)</span> </p></li>
+                    <li data-active="2"><p>IT 보안 <span>(PC/네트워크)</span> </p></li>
+                    <li data-active="3"><p>관리 <span>(교육/홍보)</span></p></li> 
+                </ul>
+            </div>
+            <div class="dep2">
+               <div class="dep2-list">
+                    <ul id="active1">
+                    <th:block th:each="psubj:${spList}">
+                        <li><a th:onclick="|javascript:go_page('C0001','${psubj.NO}')|" style="cursor: pointer">[[${psubj.TITLE}]]</a></li>
+                    </th:block>
+                    </ul>
+                    
+                    <ul id="active2">
+                     <th:block th:each="tsubj:${stList}">
+                        <li><a th:onclick="|javascript:go_page('C0002','${tsubj.NO}')|" style="cursor: pointer">[[${tsubj.TITLE}]]</a></li>
+                    </th:block>
+                    </ul>
+                    
+                    <ul id="active3">
+                     <th:block th:each="msubj:${smList}">
+                        <li><a th:onclick="|javascript:go_page('C0003','${msubj.NO}')|" style="cursor: pointer">[[${msubj.TITLE}]]</a></li>
+                    </th:block>
+                    </ul>
+                </div> 
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- //header -->
+
+<!-- container -->
+<div id="ct" class="manage"><a name="contents"></a>
+<!-- 페이지 시작 --> 
+    <div class="top-visual v1">
+        <div class="wrap">
+            <h2>출입 (인원/차량/장비)</h2> 
+        </div>
+    </div>
+    <div class="location">
+        <div class="wrap d-flex">
+            <div class="home"><a th:onclick="|javascript:home('KR')|" style="cursor: pointer"><span class="sr-only">home</span></a></div>
+            <div>
+                <div class="dropdown">
+                    <button class="dropdown-toggle" type="button" id="language-dropdown" data-toggle="dropdown">
+                        출입 (인원/차량/장비)
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="language-dropdown">
+                        <a class="dropdown-item" href="javascript:go_list('C0001');">출입 (인원/차량/장비)</a> 
+                        <a class="dropdown-item" href="javascript:go_list('C0002');">IT 보안 (PC/네트워크)</a> 
+                        <a class="dropdown-item" href="javascript:go_list('C0003');">관리 (교육/홍보)</a>
+                    </div>
+                </div> 
+            </div>
+            <div>
+					<select name="bNo" onchange="javascript:go_DetailView(this);">
+					<th:block th:each="subj:${pList}">
+					    <option th:value=${subj.NO} th:selected="${subj.NO}==${bNo}">[[${subj.TITLE}]]</option>
+					</th:block>
+					</select>
+             
+            <!--    <div class="dropdown">
+                    <button class="dropdown-toggle" type="button" id="language-dropdown" data-toggle="dropdown">
+                        파견/전출시 업무자료 이관 절차
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="language-dropdown">
+                    <th:block th:each="subj:${pList}">
+                        <a class="dropdown-item" href=""></a>
+                    </th:block>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+    </div>
+
+    <div class="content wrap">
+        <div id="mssg">
+            <!-- [D] 스타일 삭제 ->> style="border:1px solid red"  -->
+            관리자등록 컨텐츠영역  
+        </div>
+    </div>
+<!-- //페이지 시작 --> 
+</div>
+<!-- //container id="ct" -->
+
+<!-- footer -->
+<footer id="ft">  
+    <div>COPYRIGHT ⓒ HYUNDAI R&D. ALL RIGHTS RESERVED.</div>
+    <div><button class="btn" th:onclick="javascript:go_siteMap();" style="cursor: pointer" type="button">Site map</button></div>
+</footer>
+<!-- //footer -->  
+  <input type="hidden" name="category" th:value="${category}" />
+  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+  <input type="hidden" name="l_key" value="K" /> 
+ </form>
+</body>
+</html>

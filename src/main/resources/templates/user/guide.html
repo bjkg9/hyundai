@@ -1,0 +1,153 @@
+<html xmlns="http://www.w3.org/1999/xhtml" 
+    xmlns:th="http://www.thymeleaf.org" 
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta content="IE=edge" http-equiv="X-UA-Compatible">
+<meta content="telephone=no" name="format-detection">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title></title>
+
+<link rel="stylesheet" href="user/css/bootstrap.min.css" >  
+<link rel="stylesheet" href="user/css/jquery.mCustomScrollbar.min.css" >  
+<link rel="stylesheet" href="user/css/common.css">
+
+<script src="user/js/jquery.min.js"></script>
+<script src="user/js/bootstrap.min.js"></script> 
+<script src="user/js/jquery.mCustomScrollbar.concat.min.js"></script> 
+<script src="user/js/common.js"></script>
+</head>
+
+<!-- body-화면ID -->
+<body class="nav-open">  
+<!-- header -->
+<header id="hd">
+    <div class="gnb-area">
+        <h1><a href="/"><img src="user/images/top-logo.png" alt="R&D 임직원 정보보호 매뉴얼"></a></h1>
+        
+        <div class="d-flex">
+            <div class="form-srch">
+                <input type="text" class="" placeholder="키워드를 입력해주세요.">
+                <button type="button"><i class="icon-search">검색</i></button>
+            </div>
+            <div> 
+                <div class="language dropdown">
+                    <button class="dropdown-toggle" type="button" id="language-dropdown" data-toggle="dropdown">
+                        Kr
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="language-dropdown">
+                        <a class="dropdown-item" href="">Kr</a>
+                        <a class="dropdown-item" href="">En</a> 
+                    </div>
+                </div> 
+            </div>
+            <div class="down">
+                <a href=""><i class="icon-down">다운로드</i></a>
+            </div>
+            <div>
+                <a href="#gnb-full" class="btn-menu" data-toggle="menu"><i></i><span class="sr-only">메뉴 열기</span></a> 
+            </div>
+        </div>
+    </div> 
+    <a href="#contents" class="skip sr-only">전체메뉴 건너뛰기</a>
+    <div id="gnb-full" class="active1">
+        <a href="#gnb-full" class="btn-menu-close" data-toggle="menu"><i class="xi-close"></i><span class="sr-only">메뉴 닫기</span></a> 
+        <div class="full-nav">
+            <div class="dep1">
+                <ul>
+                    <li data-active="1" class="active"><p>출입 <span>(인원/차량/장비)</span> </p></li>
+                    <li data-active="2"><p>기술 <span>(PC/네트워크)</span> </p></li>
+                    <li data-active="3"><p>관리 <span>(교육/점검)</span></p></li> 
+                </ul>
+            </div>
+            <div class="dep2">
+                <div class="dep2-list">
+                    <ul>
+                        <li><a href=""> 남양출입보안시스템 사용 안내</a></li>
+                        <li><a href="">모바일 남양출입보안시스템 설치 방법 </a></li>
+                        <li><a href="">모바일 방문예약 방법</a></li>
+                        <li><a href="">사진촬영 절차</a></li>
+                        <li><a href="">신차 임시 위장해제 절차</a></li>
+                        <li><a href="">연구소 차량 출입 절차 (직원/협력업체/시험차 등)</a></li>
+                        <li><a href="">임직원 차량 스티커 발급 절차</a></li>
+                        <li><a href="">시험차 반출 절차</a></li>
+                        <li><a href="">부상·환자·장애인 직원 개인차량 출입 방법</a></li>
+                        <li><a href="">방문객 출입 절차 (방문 예약 방법)</a></li>
+                        <li><a href="">주말 방문객 출입절차</a></li>
+                        <li><a href="">협력업체 직원 연구소 출입 절차</a></li>
+                        <li><a href="">방문객 노트북 보안 승인 절차</a></li>
+                        <li><a href="">연구소 보안구역 (디자인동/PDI동/품질확보동) 출입 절차</a></li>
+                        <li><a href="">해외연구소 현지 채용 인원 출입 절차</a></li>
+                        <li><a href="">일반물품 재반입반출 절차 </a></li>
+                        <li><a href=""> 전산장비 반출입 절차</a></li>
+                        <li><a href="">사원증 재발급 절차</a></li>
+                        <li><a href="">연구소 근무 계열사 직원 출입증 신청 절차</a></li>
+                        <li><a href="">파견근로자, GE, 소내 근무 업체직원 출입증 발급 절차 </a></li>
+                    </ul>
+                </div> 
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- //header -->
+
+<!-- container -->
+<div id="ct" class="manage" style="height: 250vw;"><a name="contents"></a>
+<!-- 페이지 시작 --> 
+    <div class="top-visual">
+        <div class="wrap">
+            <h2>관리보안</h2>
+            <p>Management Security</p>
+        </div>
+    </div>
+    <div class="location">
+        <div class="wrap d-flex">
+            <div class="home"><a href="/"><span class="sr-only">home</span></a></div>
+            <div>
+                <div class="dropdown">
+                    <button class="dropdown-toggle" type="button" id="language-dropdown" data-toggle="dropdown">
+                        관리보안
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="language-dropdown">
+                        <a class="dropdown-item" href="">물리보안</a>
+                        <a class="dropdown-item" href="">기술보안</a>
+                        <!-- <a class="dropdown-item" href="">관리보안</a> -->
+                        <a class="dropdown-item" href="">공지사항</a>
+                        <a class="dropdown-item" href="">문의하기</a>
+                        <a class="dropdown-item" href="">자료실</a>
+                        <a class="dropdown-item" href="">FAQ </a> 
+                    </div>
+                </div> 
+            </div>
+            <div>
+                <div class="dropdown">
+                    <button class="dropdown-toggle" type="button" id="language-dropdown" data-toggle="dropdown">
+                        파견/전출시 업무자료 이관 절차
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="language-dropdown">
+                        <a class="dropdown-item" href="">파견/전출시 업무자료 이관 절차 </a> 
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </div>
+
+    <div class="content wrap">
+
+    </div>
+<!-- //페이지 시작 --> 
+</div>
+<!-- //container id="ct" -->
+
+<!-- footer -->
+<footer id="ft">  
+    <div>COPYRIGHT ⓒ HYUNDAI R&D. ALL RIGHTS RESERVED.</div>
+    <div><button class="btn">Site map</button></div>
+</footer>
+<!-- //footer -->  
+ 
+</body>
+</html>
